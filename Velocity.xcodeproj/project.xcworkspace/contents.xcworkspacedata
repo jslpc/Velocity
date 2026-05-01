@@ -16,4 +16,13 @@
    <FileRef
       location = "group:NewFolderSheet.swift">
    </FileRef>
+   <FileRef
+      location = "group:FavoriteServer.swift">
+   </FileRef>
+   <FileRef
+      location = "group:FavoritesConnectionView.swift">
+   </FileRef>
+   <FileRef
+      location = "group:FilePreviewPane.swift">
+   </FileRef>
 </Workspace>
