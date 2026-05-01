@@ -1,7 +1,7 @@
 import SwiftUI
 
 @main
-struct LftpBrowserApp: App {
+struct VelocityApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
