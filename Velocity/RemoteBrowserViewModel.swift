@@ -8,10 +8,27 @@ final class RemoteBrowserViewModel: ObservableObject {
     @Published private(set) var items: [FileItem] = []
     @Published var errorMessage: String?
     @Published var isLoading = false
+    @Published private(set) var pathHistory: [String] = ["/"]
+    @Published private(set) var historyIndex: Int = 0
+
+    var canGoBack: Bool {
+        historyIndex > 0
+    }
+
+    var canGoForward: Bool {
+        historyIndex < pathHistory.count - 1
+    }
+
+    var canGoUp: Bool {
+        path != "/"
+    }
 
     func connect(_ connection: LFTPConnection) {
         self.connection = connection
-        path = "/"
+        let startPath = connection.normalizedBasePath
+        path = startPath
+        pathHistory = [startPath]
+        historyIndex = 0
         Task { await refresh() }
     }
 
@@ -20,6 +37,8 @@ final class RemoteBrowserViewModel: ObservableObject {
         path = "/"
         items = []
         errorMessage = nil
+        pathHistory = ["/"]
+        historyIndex = 0
     }
 
     func refresh() async {
@@ -45,20 +64,52 @@ final class RemoteBrowserViewModel: ObservableObject {
 
     func open(_ item: FileItem) {
         guard item.isDirectory else { return }
-        path = item.id
-        Task { await refresh() }
+        navigateTo(item.id)
     }
 
     func goUp() {
         let nsPath = path as NSString
         var parent = nsPath.deletingLastPathComponent
         if parent.isEmpty { parent = "/" }
-        path = parent
-        Task { await refresh() }
+        navigateTo(parent)
     }
 
     func goRoot() {
-        path = "/"
+        navigateTo("/")
+    }
+
+    func goBack() {
+        guard canGoBack else { return }
+        historyIndex -= 1
+        path = pathHistory[historyIndex]
+        Task { await refresh() }
+    }
+
+    func goForward() {
+        guard canGoForward else { return }
+        historyIndex += 1
+        path = pathHistory[historyIndex]
+        Task { await refresh() }
+    }
+
+    func goToFolder(_ folderPath: String) {
+        let trimmed = folderPath.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty else { return }
+        navigateTo(trimmed)
+    }
+
+    private func navigateTo(_ newPath: String) {
+        guard newPath != path else { return }
+        
+        // Remove any forward history when navigating to a new path
+        if historyIndex < pathHistory.count - 1 {
+            pathHistory.removeSubrange((historyIndex + 1)...)
+        }
+        
+        path = newPath
+        pathHistory.append(newPath)
+        historyIndex = pathHistory.count - 1
+        
         Task { await refresh() }
     }
 }

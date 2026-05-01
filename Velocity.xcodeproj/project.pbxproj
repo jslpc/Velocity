@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		237896062FA4809700EB11C5 /* DownloadManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 237896052FA4809700EB11C5 /* DownloadManager.swift */; };
+		237896082FA480A100EB11C5 /* NewFolderSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 237896072FA480A100EB11C5 /* NewFolderSheet.swift */; };
+		2378960A2FA480A700EB11C5 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 237896092FA480A700EB11C5 /* SettingsView.swift */; };
+		2378960C2FA480AC00EB11C5 /* TransferSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2378960B2FA480AC00EB11C5 /* TransferSettings.swift */; };
 		"29F0D6DF-5F0A-4DB6-BF14-993E947769E0" /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = "F035DD74-3278-44D0-9F30-1F82703C2D53" /* Assets.xcassets */; };
 		"5EE7A0C4-C01B-417D-86AC-E6469BAB2F9F" /* FileBrowserPane.swift in Sources */ = {isa = PBXBuildFile; fileRef = "B5E2BAB2-41CB-4D0C-9DD9-69135FAF4A92" /* FileBrowserPane.swift */; };
 		"873B5828-E1B9-4056-95F9-869BB1AE8AA6" /* LFTPClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = "CA11EF60-DCF7-48B0-93AA-D3D5EA099D35" /* LFTPClient.swift */; };
@@ -20,6 +24,10 @@
 
 /* Begin PBXFileReference section */
 		"1545B781-DA8B-46C9-8674-18DC1F2CD8C0" /* Velocity.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Velocity.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		237896052FA4809700EB11C5 /* DownloadManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = DownloadManager.swift; path = Velocity.xcodeproj/DownloadManager.swift; sourceTree = "<group>"; };
+		237896072FA480A100EB11C5 /* NewFolderSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = NewFolderSheet.swift; path = Velocity.xcodeproj/NewFolderSheet.swift; sourceTree = "<group>"; };
+		237896092FA480A700EB11C5 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SettingsView.swift; path = Velocity.xcodeproj/SettingsView.swift; sourceTree = "<group>"; };
+		2378960B2FA480AC00EB11C5 /* TransferSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TransferSettings.swift; path = Velocity.xcodeproj/TransferSettings.swift; sourceTree = "<group>"; };
 		"59530EC9-9A20-4C70-928C-CA76420DEF62" /* FileItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileItem.swift; sourceTree = "<group>"; };
 		"663250EA-379C-4E29-8571-637F2CC04C1F" /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		"7356AEEF-0D3A-41A9-8C04-2A9D402A6474" /* LocalBrowserViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalBrowserViewModel.swift; sourceTree = "<group>"; };
@@ -69,6 +77,10 @@
 		"9EE61B07-852C-4ABC-A007-657C41E81399" = {
 			isa = PBXGroup;
 			children = (
+				2378960B2FA480AC00EB11C5 /* TransferSettings.swift */,
+				237896092FA480A700EB11C5 /* SettingsView.swift */,
+				237896072FA480A100EB11C5 /* NewFolderSheet.swift */,
+				237896052FA4809700EB11C5 /* DownloadManager.swift */,
 				"75816FE1-B079-4768-9473-9A492DA332C9" /* Velocity */,
 				"55410225-D82E-48D6-B727-F34DD67C25F7" /* Products */,
 			);
@@ -138,6 +150,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2378960C2FA480AC00EB11C5 /* TransferSettings.swift in Sources */,
+				2378960A2FA480A700EB11C5 /* SettingsView.swift in Sources */,
+				237896082FA480A100EB11C5 /* NewFolderSheet.swift in Sources */,
+				237896062FA4809700EB11C5 /* DownloadManager.swift in Sources */,
 				"9EF904A2-51E0-4BF1-B3E8-44C68F26DF25" /* ContentView.swift in Sources */,
 				"5EE7A0C4-C01B-417D-86AC-E6469BAB2F9F" /* FileBrowserPane.swift in Sources */,
 				"A5E18C15-450D-4FC3-81A3-B80209AE1B1F" /* FileItem.swift in Sources */,
@@ -162,7 +178,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = FYYZM2LKBR;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = Velocity;
@@ -314,7 +330,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = FYYZM2LKBR;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = Velocity;

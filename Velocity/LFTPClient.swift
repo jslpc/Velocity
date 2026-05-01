@@ -23,11 +23,18 @@ struct LFTPConnection: Equatable, Sendable {
     var username: String
     var password: String
     var useSFTP: Bool
+    var basePath: String
 
     /// Host URL only; credentials are passed with `open -u` in the script.
     var openURL: String {
         let scheme = useSFTP ? "sftp" : "ftp"
         return "\(scheme)://\(host)"
+    }
+    
+    /// Returns the normalized base path (defaults to "/" if empty)
+    var normalizedBasePath: String {
+        let trimmed = basePath.trimmingCharacters(in: .whitespacesAndNewlines)
+        return trimmed.isEmpty ? "/" : trimmed
     }
 }
 
@@ -273,9 +280,11 @@ final class LFTPTransferManager: ObservableObject {
 
         let isDir = (try? localURL.resourceValues(forKeys: [.isDirectoryKey]).isDirectory) ?? false
         if isDir {
-            commands.append("mirror -R \(escapedName) \(escapedRemoteDir)/\(escapedName)")
+            // mirror -R preserves timestamps by default with --preserve-time
+            commands.append("mirror -R --verbose --preserve-time \(escapedName) \(escapedRemoteDir)/\(escapedName)")
         } else {
             commands.append("cd \(escapedRemoteDir)")
+            // put command preserves timestamps by default
             commands.append("put \(escapedName)")
         }
 

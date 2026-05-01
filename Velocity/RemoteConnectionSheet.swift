@@ -7,6 +7,7 @@ struct RemoteConnectionSheet: View {
     @Binding var username: String
     @Binding var password: String
     @Binding var useSFTP: Bool
+    @Binding var basePath: String
 
     var onConnect: (LFTPConnection) -> Void
 
@@ -23,6 +24,13 @@ struct RemoteConnectionSheet: View {
                         .textContentType(.username)
                     SecureField("Password", text: $password)
                         .textContentType(.password)
+                }
+                Section("Remote Path") {
+                    TextField("Base Path", text: $basePath, prompt: Text("/"))
+                        .font(.system(.body, design: .monospaced))
+                    Text("Optional. The starting directory on the remote server. Leave empty to start at the root directory.")
+                        .font(.footnote)
+                        .foregroundStyle(.secondary)
                 }
                 Section {
                     Text("Requires lftp on this Mac (for example `brew install lftp`). Password is sent to the lftp process for this session only.")
@@ -42,7 +50,8 @@ struct RemoteConnectionSheet: View {
                             host: host.trimmingCharacters(in: .whitespacesAndNewlines),
                             username: username.trimmingCharacters(in: .whitespacesAndNewlines),
                             password: password,
-                            useSFTP: useSFTP
+                            useSFTP: useSFTP,
+                            basePath: basePath.trimmingCharacters(in: .whitespacesAndNewlines)
                         )
                         onConnect(connection)
                         dismiss()
@@ -51,6 +60,6 @@ struct RemoteConnectionSheet: View {
                 }
             }
         }
-        .frame(minWidth: 400, minHeight: 320)
+        .frame(minWidth: 400, minHeight: 380)
     }
 }
