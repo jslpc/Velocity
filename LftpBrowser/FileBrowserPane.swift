@@ -6,7 +6,7 @@ struct FileBrowserPane: View {
     let items: [FileItem]
     let isLoading: Bool
     let errorMessage: String?
-    @Binding var selection: String?
+    @Binding var selection: Set<String>
     let onOpenItem: (FileItem) -> Void
 
     var body: some View {

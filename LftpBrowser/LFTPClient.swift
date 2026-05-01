@@ -1,4 +1,5 @@
 import Foundation
+import Combine
 
 enum LFTPError: LocalizedError {
     case lftpNotFound
@@ -44,19 +45,39 @@ final class LFTPRunner {
     /// - Parameter url: FTP/SFTP URL accepted by lftp.
     /// - Returns: Combined stdout/stderr output for parser consumption.
     func listLong(url: String) throws -> String {
+        try runCommand("open \(escapeForLFTP(url)); cls --long")
+    }
+
+    func runCommand(_ command: String, onLine: (@Sendable (String) -> Void)? = nil) throws -> String {
         let process = Process()
         process.executableURL = executableURL
-        process.arguments = ["-c", "open \(escapeForLFTP(url)); cls --long"]
+        process.arguments = ["-c", command]
 
         let pipe = Pipe()
         process.standardOutput = pipe
         process.standardError = pipe
 
+        let collector = StreamCollector(onLine: onLine)
+
+        pipe.fileHandleForReading.readabilityHandler = { handle in
+            let data = handle.availableData
+            if data.isEmpty { return }
+            guard let chunk = String(data: data, encoding: .utf8), !chunk.isEmpty else { return }
+            collector.append(chunk)
+        }
+
         try process.run()
         process.waitUntilExit()
+        pipe.fileHandleForReading.readabilityHandler = nil
 
-        let data = pipe.fileHandleForReading.readDataToEndOfFile()
-        let output = String(data: data, encoding: .utf8) ?? ""
+        let trailing = pipe.fileHandleForReading.readDataToEndOfFile()
+        if !trailing.isEmpty, let trailingChunk = String(data: trailing, encoding: .utf8) {
+            collector.append(trailingChunk)
+        }
+
+        collector.finish()
+
+        let output = collector.output
 
         guard process.terminationStatus == 0 else {
             let trimmed = output.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -72,6 +93,222 @@ final class LFTPRunner {
             .replacingOccurrences(of: "\\", with: "\\\\")
             .replacingOccurrences(of: "\"", with: "\\\"")
         return "\"\(escaped)\""
+    }
+}
+
+private final class StreamCollector: @unchecked Sendable {
+    private let lock = NSLock()
+    private(set) var output = ""
+    private var partialLine = ""
+    private let onLine: (@Sendable (String) -> Void)?
+
+    init(onLine: (@Sendable (String) -> Void)?) {
+        self.onLine = onLine
+    }
+
+    func append(_ chunk: String) {
+        lock.lock()
+        defer { lock.unlock() }
+        output.append(chunk)
+        guard let onLine else { return }
+
+        partialLine.append(chunk)
+        let parts = partialLine.components(separatedBy: .newlines)
+        for line in parts.dropLast() where !line.isEmpty {
+            onLine(line)
+        }
+        partialLine = parts.last ?? ""
+    }
+
+    func finish() {
+        lock.lock()
+        defer { lock.unlock() }
+        guard let onLine else { return }
+        let finalLine = partialLine.trimmingCharacters(in: .whitespacesAndNewlines)
+        if !finalLine.isEmpty {
+            onLine(finalLine)
+        }
+    }
+}
+
+private struct LFTPTransferJob {
+    let id = UUID()
+    let displayName: String
+    let command: String
+}
+
+@MainActor
+final class LFTPTransferManager: ObservableObject {
+    @Published private(set) var isActive = false
+    @Published private(set) var overallProgress: Double = 0
+    @Published private(set) var statusText = "No active transfers"
+    @Published private(set) var latestOutputLine: String?
+    @Published private(set) var queuedCount = 0
+    @Published private(set) var runningCount = 0
+
+    private let maxParallelTransfers = 2
+    private var pendingJobs: [LFTPTransferJob] = []
+    private var runningProgress: [UUID: Double] = [:]
+    private var totalJobs = 0
+    private var completedJobs = 0
+    private var failedJobs = 0
+    private var workerTasks: [UUID: Task<Void, Never>] = [:]
+
+    func enqueueUploads(localURLs: [URL], connection: LFTPConnection, remoteDirectory: String) {
+        let jobs = localURLs.map { localURL in
+            LFTPTransferJob(
+                displayName: localURL.lastPathComponent,
+                command: Self.uploadCommand(for: localURL, connection: connection, remoteDirectory: remoteDirectory)
+            )
+        }
+
+        guard !jobs.isEmpty else { return }
+        pendingJobs.append(contentsOf: jobs)
+        totalJobs += jobs.count
+        queuedCount = pendingJobs.count
+        statusText = "Queued \(pendingJobs.count) transfer(s)"
+        isActive = true
+        launchNextJobsIfPossible()
+    }
+
+    func cancelAll() {
+        for task in workerTasks.values {
+            task.cancel()
+        }
+        workerTasks.removeAll()
+        pendingJobs.removeAll()
+        runningProgress.removeAll()
+        queuedCount = 0
+        runningCount = 0
+        isActive = false
+        statusText = "Transfers canceled"
+        overallProgress = 0
+    }
+
+    private func launchNextJobsIfPossible() {
+        while runningProgress.count < maxParallelTransfers, !pendingJobs.isEmpty {
+            let job = pendingJobs.removeFirst()
+            queuedCount = pendingJobs.count
+            runningProgress[job.id] = 0
+            runningCount = runningProgress.count
+            updateOverallProgress()
+
+            let task = Task.detached(priority: .userInitiated) { [weak self] in
+                guard let self else { return }
+                do {
+                    let runner = try LFTPRunner()
+                    _ = try runner.runCommand(job.command) { line in
+                        Task { @MainActor [weak self] in
+                            self?.handleOutput(line, for: job.id)
+                        }
+                    }
+                    await MainActor.run {
+                        self.finish(jobID: job.id, didFail: false, message: "Transferred \(job.displayName)")
+                    }
+                } catch {
+                    await MainActor.run {
+                        self.finish(jobID: job.id, didFail: true, message: "Failed \(job.displayName): \(error.localizedDescription)")
+                    }
+                }
+            }
+            workerTasks[job.id] = task
+        }
+    }
+
+    private func handleOutput(_ line: String, for jobID: UUID) {
+        latestOutputLine = line
+        if let percent = Self.extractPercent(line) {
+            runningProgress[jobID] = min(max(percent / 100.0, 0), 1)
+            updateOverallProgress()
+        }
+        statusText = "Running \(runningProgress.count), queued \(pendingJobs.count)"
+    }
+
+    private func finish(jobID: UUID, didFail: Bool, message: String) {
+        workerTasks[jobID] = nil
+        runningProgress[jobID] = nil
+        runningCount = runningProgress.count
+        if didFail {
+            failedJobs += 1
+        } else {
+            completedJobs += 1
+        }
+        latestOutputLine = message
+        launchNextJobsIfPossible()
+        updateOverallProgress()
+
+        if runningProgress.isEmpty, pendingJobs.isEmpty {
+            isActive = false
+            let totalDone = completedJobs + failedJobs
+            statusText = "Completed \(completedJobs)/\(totalDone) transfers"
+        }
+    }
+
+    private func updateOverallProgress() {
+        guard totalJobs > 0 else {
+            overallProgress = 0
+            return
+        }
+
+        let runningFraction = runningProgress.values.reduce(0, +)
+        let done = Double(completedJobs) + runningFraction
+        overallProgress = min(max(done / Double(totalJobs), 0), 1)
+    }
+
+    private static func uploadCommand(for localURL: URL, connection: LFTPConnection, remoteDirectory: String) -> String {
+        let remoteDir = remoteDirectory.isEmpty ? "/" : remoteDirectory
+        let name = localURL.lastPathComponent
+        let openLine = openCommandLine(connection)
+        let escapedParent = escape(localURL.deletingLastPathComponent().path)
+        let escapedName = escape(name)
+        let escapedRemoteDir = escape(remoteDir)
+
+        var commands = [
+            "set net:timeout 30",
+            "set net:max-retries 2",
+            openLine,
+            "lcd \(escapedParent)",
+            "mkdir -p \(escapedRemoteDir)",
+        ]
+
+        let isDir = (try? localURL.resourceValues(forKeys: [.isDirectoryKey]).isDirectory) ?? false
+        if isDir {
+            commands.append("mirror -R \(escapedName) \(escapedRemoteDir)/\(escapedName)")
+        } else {
+            commands.append("cd \(escapedRemoteDir)")
+            commands.append("put \(escapedName)")
+        }
+
+        return commands.joined(separator: "; ")
+    }
+
+    private static func openCommandLine(_ connection: LFTPConnection) -> String {
+        let url = escape(connection.openURL)
+        if connection.username.isEmpty {
+            return "open \(url)"
+        }
+        let user = escape(connection.username)
+        let pass = escape(connection.password)
+        return "open -u \(user),\(pass) \(url)"
+    }
+
+    private static func escape(_ value: String) -> String {
+        let escaped = value
+            .replacingOccurrences(of: "\\", with: "\\\\")
+            .replacingOccurrences(of: "\"", with: "\\\"")
+        return "\"\(escaped)\""
+    }
+
+    private static func extractPercent(_ line: String) -> Double? {
+        let pattern = #"([0-9]{1,3})%"#
+        guard let regex = try? NSRegularExpression(pattern: pattern) else { return nil }
+        let range = NSRange(line.startIndex..<line.endIndex, in: line)
+        guard let match = regex.matches(in: line, range: range).last,
+              let valueRange = Range(match.range(at: 1), in: line),
+              let value = Double(line[valueRange]) else {
+            return nil
+        }
+        return min(max(value, 0), 100)
     }
 }
 

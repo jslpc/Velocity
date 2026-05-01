@@ -3,6 +3,7 @@ import SwiftUI
 struct ContentView: View {
     @StateObject private var localBrowser = LocalBrowserViewModel()
     @StateObject private var remoteBrowser = RemoteBrowserViewModel()
+    @StateObject private var transferManager = LFTPTransferManager()
 
     @State private var showConnectionSheet = false
     @State private var draftHost = ""
@@ -12,12 +13,8 @@ struct ContentView: View {
 
     /// Two primary columns (local + remote); detail is unused but required by `NavigationSplitView` on newer SDKs.
     @State private var splitVisibility: NavigationSplitViewVisibility = .doubleColumn
-    @State private var localSelection: String?
-    @State private var remoteSelection: String?
-    @State private var transferProgress: Double = 0
-    @State private var isTransferActive = false
-    @State private var transferStatus = "No active transfers"
-    @State private var transferTask: Task<Void, Never>?
+    @State private var localSelection: Set<String> = []
+    @State private var remoteSelection: Set<String> = []
 
     var body: some View {
         NavigationSplitView(columnVisibility: $splitVisibility) {
@@ -57,7 +54,7 @@ struct ContentView: View {
                         showConnectionSheet = true
                     } else {
                         remoteBrowser.disconnect()
-                        remoteSelection = nil
+                        remoteSelection = []
                     }
                 } label: {
                     Label(remoteBrowser.connection == nil ? "Connect" : "Disconnect", systemImage: "link")
@@ -76,8 +73,8 @@ struct ContentView: View {
                 } label: {
                     Label("Transfer", systemImage: "arrow.left.arrow.right.circle")
                 }
-                .disabled(!canStartTransfer || isTransferActive)
-                .help("Transfer the selected local item to the remote location")
+                .disabled(!canStartTransfer)
+                .help("Queue selected local items for transfer to the remote location")
             }
         }
         .safeAreaInset(edge: .bottom) {
@@ -122,18 +119,17 @@ struct ContentView: View {
         }
     }
 
-    private var selectedLocalItem: FileItem? {
-        guard let localSelection else { return nil }
-        return localBrowser.items.first(where: { $0.id == localSelection })
+    private var selectedLocalItems: [FileItem] {
+        localBrowser.items.filter { localSelection.contains($0.id) }
     }
 
     private var selectedRemoteItem: FileItem? {
-        guard let remoteSelection else { return nil }
-        return remoteBrowser.items.first(where: { $0.id == remoteSelection })
+        guard let selectedID = remoteSelection.first else { return nil }
+        return remoteBrowser.items.first(where: { $0.id == selectedID })
     }
 
     private var canStartTransfer: Bool {
-        selectedLocalItem != nil && remoteBrowser.connection != nil
+        !selectedLocalItems.isEmpty && remoteBrowser.connection != nil
     }
 
     private func refreshVisiblePanes() {
@@ -142,45 +138,46 @@ struct ContentView: View {
     }
 
     private func startTransfer() {
-        guard canStartTransfer else { return }
-        transferTask?.cancel()
-        isTransferActive = true
-        transferProgress = 0
-        let localName = selectedLocalItem?.name ?? "selection"
-        let destination = selectedRemoteItem?.name ?? remoteBrowser.path
-        transferStatus = "Transferring \(localName) to \(destination)..."
-
-        transferTask = Task { @MainActor in
-            // Placeholder visual progress until transfer actions are wired to lftp get/put/mirror commands.
-            while transferProgress < 1.0 {
-                try? await Task.sleep(for: .milliseconds(120))
-                if Task.isCancelled { return }
-                transferProgress = min(transferProgress + 0.05, 1.0)
-            }
-            isTransferActive = false
-            transferStatus = "Transfer complete"
+        guard let connection = remoteBrowser.connection else { return }
+        let remoteBasePath: String
+        if let selectedRemoteItem, selectedRemoteItem.isDirectory {
+            remoteBasePath = selectedRemoteItem.id
+        } else {
+            remoteBasePath = remoteBrowser.path
         }
+
+        let urls = selectedLocalItems.map { URL(fileURLWithPath: $0.id) }
+        transferManager.enqueueUploads(localURLs: urls, connection: connection, remoteDirectory: remoteBasePath)
     }
 
     private var transferFooter: some View {
         VStack(spacing: 6) {
-            if isTransferActive {
-                ProgressView(value: transferProgress)
+            if transferManager.isActive {
+                ProgressView(value: transferManager.overallProgress)
                     .progressViewStyle(.linear)
             }
 
             HStack(spacing: 8) {
-                Image(systemName: isTransferActive ? "arrow.triangle.2.circlepath.circle.fill" : "externaldrive.badge.checkmark")
-                    .foregroundStyle(isTransferActive ? Color.accentColor : Color.secondary)
-                Text(transferStatus)
+                Image(systemName: transferManager.isActive ? "arrow.triangle.2.circlepath.circle.fill" : "externaldrive.badge.checkmark")
+                    .foregroundStyle(transferManager.isActive ? Color.accentColor : Color.secondary)
+                Text(transferManager.statusText)
                     .font(.callout)
                     .foregroundStyle(.secondary)
+                    .lineLimit(1)
                 Spacer()
-                if isTransferActive {
-                    Text(transferProgress.formatted(.percent.precision(.fractionLength(0))))
+                if transferManager.isActive {
+                    Text(transferManager.overallProgress.formatted(.percent.precision(.fractionLength(0))))
                         .font(.caption.monospacedDigit())
                         .foregroundStyle(.secondary)
                 }
+            }
+
+            if let line = transferManager.latestOutputLine {
+                Text(line)
+                    .font(.caption.monospaced())
+                    .foregroundStyle(.secondary)
+                    .lineLimit(1)
+                    .frame(maxWidth: .infinity, alignment: .leading)
             }
         }
         .padding(.horizontal, 12)
