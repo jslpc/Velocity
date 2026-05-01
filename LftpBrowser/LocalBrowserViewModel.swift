@@ -23,7 +23,7 @@ final class LocalBrowserViewModel: ObservableObject {
         do {
             let urls = try fileManager.contentsOfDirectory(
                 at: path,
-                includingPropertiesForKeys: [.isDirectoryKey, .fileSizeKey],
+                includingPropertiesForKeys: [.isDirectoryKey, .fileSizeKey, .contentModificationDateKey],
                 options: [.skipsHiddenFiles]
             )
 
@@ -31,10 +31,18 @@ final class LocalBrowserViewModel: ObservableObject {
             for url in urls {
                 let name = url.lastPathComponent
                 if name == "." || name == ".." { continue }
-                let values = try url.resourceValues(forKeys: [.isDirectoryKey, .fileSizeKey])
+                let values = try url.resourceValues(forKeys: [.isDirectoryKey, .fileSizeKey, .contentModificationDateKey])
                 let isDir = values.isDirectory ?? false
                 let size = isDir ? nil : Int64(values.fileSize ?? 0)
-                built.append(FileItem(id: url.path, name: name, isDirectory: isDir, size: size))
+                built.append(
+                    FileItem(
+                        id: url.path,
+                        name: name,
+                        isDirectory: isDir,
+                        size: size,
+                        modificationDate: values.contentModificationDate
+                    )
+                )
             }
 
             items = built.sorted { lhs, rhs in

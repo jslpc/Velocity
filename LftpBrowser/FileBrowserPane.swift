@@ -6,10 +6,8 @@ struct FileBrowserPane: View {
     let items: [FileItem]
     let isLoading: Bool
     let errorMessage: String?
+    @Binding var selection: String?
     let onOpenItem: (FileItem) -> Void
-    let onGoUp: () -> Void
-    let onGoHome: () -> Void
-    let onRefresh: () -> Void
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
@@ -18,24 +16,6 @@ struct FileBrowserPane: View {
             content
         }
         .navigationTitle(title)
-        .toolbar {
-            ToolbarItemGroup(placement: .navigation) {
-                Button(action: onGoUp) {
-                    Label("Enclosing folder", systemImage: "arrow.up.square")
-                }
-                .help("Open parent folder")
-
-                Button(action: onGoHome) {
-                    Label("Home or root", systemImage: "house")
-                }
-                .help(title == "Local" ? "Go to your home folder" : "Go to server root")
-
-                Button(action: onRefresh) {
-                    Label("Refresh", systemImage: "arrow.clockwise")
-                }
-                .help("Refresh listing")
-            }
-        }
     }
 
     private var pathBar: some View {
@@ -64,20 +44,30 @@ struct FileBrowserPane: View {
             ContentUnavailableView("Empty folder", systemImage: "folder", description: Text("This folder has no visible items."))
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
         } else {
-            List(items) { item in
-                Button {
-                    onOpenItem(item)
-                } label: {
-                    Label {
-                        Text(item.displayName)
-                            .foregroundStyle(.primary)
-                    } icon: {
-                        Image(systemName: item.isDirectory ? "folder.fill" : "doc")
-                            .symbolRenderingMode(.hierarchical)
-                            .foregroundStyle(item.isDirectory ? .blue : .secondary)
+            List(items, selection: $selection) { item in
+                HStack(spacing: 10) {
+                    Image(systemName: item.isDirectory ? "folder.fill" : "doc")
+                        .symbolRenderingMode(.hierarchical)
+                        .foregroundStyle(item.isDirectory ? .blue : .secondary)
+                    Text(item.displayName)
+                        .lineLimit(1)
+                    Spacer(minLength: 8)
+                    if let size = item.size {
+                        Text(size.formatted(.byteCount(style: .file)))
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
+                    if let modified = item.modificationDate {
+                        Text(modified, style: .date)
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
                     }
                 }
-                .buttonStyle(.plain)
+                .contentShape(Rectangle())
+                .tag(item.id)
+                .onTapGesture(count: 2) {
+                    onOpenItem(item)
+                }
             }
             .listStyle(.inset)
         }
