@@ -1,0 +1,351 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		29F0D6DF-5F0A-4DB6-BF14-993E947769E0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F035DD74-3278-44D0-9F30-1F82703C2D53 /* Assets.xcassets */; };
+		5EE7A0C4-C01B-417D-86AC-E6469BAB2F9F /* FileBrowserPane.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E2BAB2-41CB-4D0C-9DD9-69135FAF4A92 /* FileBrowserPane.swift */; };
+		873B5828-E1B9-4056-95F9-869BB1AE8AA6 /* LFTPClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA11EF60-DCF7-48B0-93AA-D3D5EA099D35 /* LFTPClient.swift */; };
+		9590F24E-2DA9-4C40-A42C-9AF19B775F27 /* LftpBrowserApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD6C674B-D3B2-45CC-BB6F-FF08ECA359FC /* LftpBrowserApp.swift */; };
+		9A6234E7-65A0-4BB5-9404-B3C15F97DD37 /* RemoteBrowserViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC789F58-F6E3-40A4-B2CA-C8CD4B6DCBCF /* RemoteBrowserViewModel.swift */; };
+		9EF904A2-51E0-4BF1-B3E8-44C68F26DF25 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 663250EA-379C-4E29-8571-637F2CC04C1F /* ContentView.swift */; };
+		A5E18C15-450D-4FC3-81A3-B80209AE1B1F /* FileItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59530EC9-9A20-4C70-928C-CA76420DEF62 /* FileItem.swift */; };
+		E5738E87-840D-401D-B00C-44E7B5E2F6D5 /* RemoteConnectionSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = D44DB36E-FFC2-471C-9FD1-32BF01096A87 /* RemoteConnectionSheet.swift */; };
+		FD816854-AB7E-44F8-A1C6-B78A5FBC8F5C /* LocalBrowserViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7356AEEF-0D3A-41A9-8C04-2A9D402A6474 /* LocalBrowserViewModel.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		1545B781-DA8B-46C9-8674-18DC1F2CD8C0 /* LftpBrowser.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LftpBrowser.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		59530EC9-9A20-4C70-928C-CA76420DEF62 /* FileItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileItem.swift; sourceTree = "<group>"; };
+		663250EA-379C-4E29-8571-637F2CC04C1F /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		7356AEEF-0D3A-41A9-8C04-2A9D402A6474 /* LocalBrowserViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalBrowserViewModel.swift; sourceTree = "<group>"; };
+		B5E2BAB2-41CB-4D0C-9DD9-69135FAF4A92 /* FileBrowserPane.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileBrowserPane.swift; sourceTree = "<group>"; };
+		CA11EF60-DCF7-48B0-93AA-D3D5EA099D35 /* LFTPClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LFTPClient.swift; sourceTree = "<group>"; };
+		D44DB36E-FFC2-471C-9FD1-32BF01096A87 /* RemoteConnectionSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteConnectionSheet.swift; sourceTree = "<group>"; };
+		DC789F58-F6E3-40A4-B2CA-C8CD4B6DCBCF /* RemoteBrowserViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteBrowserViewModel.swift; sourceTree = "<group>"; };
+		DD6C674B-D3B2-45CC-BB6F-FF08ECA359FC /* LftpBrowserApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LftpBrowserApp.swift; sourceTree = "<group>"; };
+		F035DD74-3278-44D0-9F30-1F82703C2D53 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		F49B8C10-4397-445B-A68F-0CFD249E88D4 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		55410225-D82E-48D6-B727-F34DD67C25F7 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				1545B781-DA8B-46C9-8674-18DC1F2CD8C0 /* LftpBrowser.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		75816FE1-B079-4768-9473-9A492DA332C9 /* LftpBrowser */ = {
+			isa = PBXGroup;
+			children = (
+				DD6C674B-D3B2-45CC-BB6F-FF08ECA359FC /* LftpBrowserApp.swift */,
+				663250EA-379C-4E29-8571-637F2CC04C1F /* ContentView.swift */,
+				B5E2BAB2-41CB-4D0C-9DD9-69135FAF4A92 /* FileBrowserPane.swift */,
+				59530EC9-9A20-4C70-928C-CA76420DEF62 /* FileItem.swift */,
+				CA11EF60-DCF7-48B0-93AA-D3D5EA099D35 /* LFTPClient.swift */,
+				7356AEEF-0D3A-41A9-8C04-2A9D402A6474 /* LocalBrowserViewModel.swift */,
+				DC789F58-F6E3-40A4-B2CA-C8CD4B6DCBCF /* RemoteBrowserViewModel.swift */,
+				D44DB36E-FFC2-471C-9FD1-32BF01096A87 /* RemoteConnectionSheet.swift */,
+				F035DD74-3278-44D0-9F30-1F82703C2D53 /* Assets.xcassets */,
+			);
+			path = LftpBrowser;
+			sourceTree = "<group>";
+		};
+		9EE61B07-852C-4ABC-A007-657C41E81399 = {
+			isa = PBXGroup;
+			children = (
+				75816FE1-B079-4768-9473-9A492DA332C9 /* LftpBrowser */,
+				55410225-D82E-48D6-B727-F34DD67C25F7 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		F091920D-797D-495B-986E-F944EF7799C5 /* LftpBrowser */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C3C0342C-965C-4842-8113-9A0BCB2895B4 /* Build configuration list for PBXNativeTarget "LftpBrowser" */;
+			buildPhases = (
+				511D504F-D245-4436-B346-AF010F08AEB2 /* Sources */,
+				F49B8C10-4397-445B-A68F-0CFD249E88D4 /* Frameworks */,
+				E392873F-2171-4972-A7BB-DF476F21C399 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = LftpBrowser;
+			productName = LftpBrowser;
+			productReference = 1545B781-DA8B-46C9-8674-18DC1F2CD8C0 /* LftpBrowser.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		291EA185-F7C7-4AA1-9449-36A578329D3E /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1500;
+				LastUpgradeCheck = 1500;
+			};
+			buildConfigurationList = B138450A-37BB-4B26-8939-F018A42FCEC0 /* Build configuration list for PBXProject "LftpBrowser" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 9EE61B07-852C-4ABC-A007-657C41E81399;
+			productRefGroup = 55410225-D82E-48D6-B727-F34DD67C25F7 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				F091920D-797D-495B-986E-F944EF7799C5 /* LftpBrowser */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		E392873F-2171-4972-A7BB-DF476F21C399 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				29F0D6DF-5F0A-4DB6-BF14-993E947769E0 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		511D504F-D245-4436-B346-AF010F08AEB2 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9EF904A2-51E0-4BF1-B3E8-44C68F26DF25 /* ContentView.swift in Sources */,
+				5EE7A0C4-C01B-417D-86AC-E6469BAB2F9F /* FileBrowserPane.swift in Sources */,
+				A5E18C15-450D-4FC3-81A3-B80209AE1B1F /* FileItem.swift in Sources */,
+				873B5828-E1B9-4056-95F9-869BB1AE8AA6 /* LFTPClient.swift in Sources */,
+				9590F24E-2DA9-4C40-A42C-9AF19B775F27 /* LftpBrowserApp.swift in Sources */,
+				FD816854-AB7E-44F8-A1C6-B78A5FBC8F5C /* LocalBrowserViewModel.swift in Sources */,
+				9A6234E7-65A0-4BB5-9404-B3C15F97DD37 /* RemoteBrowserViewModel.swift in Sources */,
+				E5738E87-840D-401D-B00C-44E7B5E2F6D5 /* RemoteConnectionSheet.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		ACEAEE25-92A6-4D44-8F21-9DD5768F9F9B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.jslpc.LftpBrowser;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_STRICT_CONCURRENCY = complete;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		FB1ED4B9-C295-4303-AFAE-B504DB791878 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.jslpc.LftpBrowser;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_STRICT_CONCURRENCY = complete;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		F93DD2BC-4B8E-4EE0-8740-7B9BBF6EFAA9 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		F93DD2BC-4B8E-4EE0-8740-7B9BBF6EFAAA /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		B138450A-37BB-4B26-8939-F018A42FCEC0 /* Build configuration list for PBXProject "LftpBrowser" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F93DD2BC-4B8E-4EE0-8740-7B9BBF6EFAA9 /* Debug */,
+				F93DD2BC-4B8E-4EE0-8740-7B9BBF6EFAAA /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C3C0342C-965C-4842-8113-9A0BCB2895B4 /* Build configuration list for PBXNativeTarget "LftpBrowser" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				ACEAEE25-92A6-4D44-8F21-9DD5768F9F9B /* Debug */,
+				FB1ED4B9-C295-4303-AFAE-B504DB791878 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 291EA185-F7C7-4AA1-9449-36A578329D3E /* Project object */;
+}
